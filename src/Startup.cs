@@ -1,3 +1,4 @@
+using Iot.SignalR.Server.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,8 @@ namespace Iot.SignalR.Server
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +49,12 @@ namespace Iot.SignalR.Server
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+
+            app.UseSignalR(route =>
+            {
+                route.MapHub<SignalRServerHub>("/IotServerHub");
+            });
 
             app.UseMvc(routes =>
             {
