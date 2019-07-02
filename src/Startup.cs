@@ -1,7 +1,6 @@
 using Iot.SignalR.Server.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +20,7 @@ namespace Iot.SignalR.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -46,15 +46,20 @@ namespace Iot.SignalR.Server
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-
+            app.UseCors(
+                options => options.AllowAnyOrigin()
+            );
 
             app.UseSignalR(route =>
             {
                 route.MapHub<SignalRServerHub>("/IotServerHub");
             });
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
+            
 
             app.UseMvc(routes =>
             {
