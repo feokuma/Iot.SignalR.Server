@@ -13,6 +13,8 @@ namespace Iot.SignalR.Server.Hubs
             Console.WriteLine("Connected");
             Console.WriteLine($"{Context.ConnectionId}");
             Clients.Client(Context.ConnectionId).SendAsync("Notify", lastStatus);
+            Clients.All.SendAsync("Notify", lastStatus);
+
             return base.OnConnectedAsync();
         }
 
@@ -27,7 +29,6 @@ namespace Iot.SignalR.Server.Hubs
         {
             lastStatus = status;
             Clients.All.SendAsync("Notify", status);
-            Console.WriteLine($"Status received: {status}");
         }
 
         public void SendStateToDevice(bool status)

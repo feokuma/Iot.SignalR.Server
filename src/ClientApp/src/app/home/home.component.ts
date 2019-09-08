@@ -20,6 +20,10 @@ export class HomeComponent implements OnInit {
       this.state = state;
     });
 
+    this.hubConnection.on('Closed', (error) =>{
+      this.hubConnection.start();
+    });
+
     this.hubConnection.start();
   }
 
